@@ -16,8 +16,9 @@ h1 span{color:var(--acc)}
 .tag{font-size:11px;letter-spacing:.9px;text-transform:uppercase;color:var(--dim2);border:1px solid var(--line);padding:3px 9px;border-radius:99px}
 .sub{color:var(--dim);margin-top:9px;font-size:14.5px;max-width:760px}
 .searchbox{display:flex;gap:10px;margin-bottom:12px}
-input[type=text]{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:15px 17px;border-radius:11px;font-size:15.5px;font-family:inherit}
+input[type=text]{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:15px 17px;border-radius:11px;font-size:15.5px;font-family:inherit;transition:color .15s ease}
 input[type=text]:focus{outline:none;border-color:var(--acc2)}
+input[type=text].prefilled{color:var(--dim)}
 button.go{background:var(--acc);color:#12140a;border:0;padding:0 26px;border-radius:11px;font-weight:680;font-size:15px;cursor:pointer;font-family:inherit}
 button.go:hover{filter:brightness(1.08)}
 .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
@@ -371,14 +372,15 @@ function run(){
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 const EX=['melancholy female vocal that builds, feels like loss','80s synth track for a nostalgic road trip montage','something defiant for a protest scene','uptempo soul for a wedding dance floor','brooding instrumental for a villain entrance','dreamy and slow for a rainy morning ad','anthemic rock for a sports highlight reel','sensual 90s rnb for a romance scene'];
 document.getElementById('chips').innerHTML=EX.map(e=>'<span class="chip">'+esc(e)+'</span>').join('');
-document.getElementById('chips').addEventListener('click',e=>{if(e.target.classList.contains('chip')){document.getElementById('q').value=e.target.textContent;run()}});
+document.getElementById('chips').addEventListener('click',e=>{if(e.target.classList.contains('chip')){const qEl=document.getElementById('q');qEl.value=e.target.textContent;qEl.classList.remove('prefilled');run()}});
 document.getElementById('btn').addEventListener('click',run);
 document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')run()});
+document.getElementById('q').addEventListener('input',e=>e.target.classList.remove('prefilled'));
 document.getElementById('era').addEventListener('change',run);
 document.getElementById('annonly').addEventListener('change',run);
 document.getElementById('w').addEventListener('input',e=>{W=+e.target.value/100;document.getElementById('wv').textContent=Math.round(W*100)+' / '+Math.round((1-W)*100);run()});
 document.getElementById('s1').textContent=DATA.length;
 document.getElementById('s2').textContent=new Set(DATA.map(d=>d.artist)).size;
 document.getElementById('s3').textContent=DATA.reduce((a,d)=>a+d.moods.length+d.contexts.length+d.sync.length+d.texture.length+d.vocal.length+d.themes.length,0).toLocaleString();
-document.getElementById('q').value=EX[0];run();
+document.getElementById('q').value=EX[0];document.getElementById('q').classList.add('prefilled');run();
 </script></body></html>
